@@ -13,6 +13,7 @@ import de.fhpotsdam.unfolding.marker.Marker;
 import de.fhpotsdam.unfolding.marker.MultiMarker;
 import de.fhpotsdam.unfolding.providers.Google;
 import de.fhpotsdam.unfolding.providers.MBTilesMapProvider;
+import de.fhpotsdam.unfolding.providers.Microsoft;
 import de.fhpotsdam.unfolding.utils.MapUtils;
 import parsing.ParseFeed;
 import processing.core.PApplet;
@@ -70,7 +71,8 @@ public class EarthquakeCityMap extends PApplet {
 		    earthquakesURL = "2.5_week.atom";  // The same feed, but saved August 7, 2015
 		}
 		else {
-			map = new UnfoldingMap(this, 200, 50, 650, 600, new Google.GoogleMapProvider());
+			//map = new UnfoldingMap(this, 200, 50, 650, 600, new Google.GoogleMapProvider());
+			map = new UnfoldingMap(this, 200, 50, 650, 600, new Microsoft.HybridProvider());
 			// IF YOU WANT TO TEST WITH A LOCAL FILE, uncomment the next line
 		    //earthquakesURL = "2.5_week.atom";
 		}
@@ -146,6 +148,13 @@ public class EarthquakeCityMap extends PApplet {
 	private void selectMarkerIfHover(List<Marker> markers)
 	{
 		// TODO: Implement this method
+		for (Marker m: markers) {
+			if (m.isInside(map, mouseX, mouseY) && lastSelected == null) {
+				lastSelected = (CommonMarker)m;
+				lastSelected.setSelected(true);
+				break;
+			}
+		}
 	}
 	
 	/** The event handler for mouse clicks
@@ -159,8 +168,73 @@ public class EarthquakeCityMap extends PApplet {
 		// TODO: Implement this method
 		// Hint: You probably want a helper method or two to keep this code
 		// from getting too long/disorganized
+		
+		if (lastClicked == null) {
+			ifMarkerClicked(quakeMarkers);
+			ifMarkerClicked(cityMarkers);
+			
+			if (lastClicked instanceof EarthquakeMarker) {
+				hideOtherMarkers(quakeMarkers);
+				hideCityMarkers();
+			} else if (lastClicked instanceof CityMarker) {
+				hideOtherMarkers(cityMarkers);
+				hideQuakeMarkers();
+			}
+		} else {	
+			lastClicked.setClicked(false);
+			lastClicked = null;
+			unhideMarkers();
+		}
 	}
 	
+	//check if a marker has been clicked
+	private void ifMarkerClicked(List<Marker> markers) {
+		for (Marker m : markers) {
+			if (lastClicked != null) {
+				break;
+			}
+			
+			if (m.isInside(map, mouseX, mouseY) && !m.isHidden()) {
+				lastClicked = (CommonMarker)m;
+				lastClicked.setClicked(true);
+				break;
+			}
+		}
+	}
+	
+	//Hides other markers of the given type except the one that has been clicked
+	private void hideOtherMarkers(List<Marker> markers) {
+		for (Marker m : markers) {
+			if (m != lastClicked)
+				m.setHidden(true);
+		}
+	}
+	
+	//hides all CityMarkers outside of the quake's threat circle
+	private void hideCityMarkers() {
+		Location quakeLocation = lastClicked.getLocation();
+		
+		for (Marker cm : cityMarkers) {
+			if ( cm.getDistanceTo(quakeLocation) < ((EarthquakeMarker)lastClicked).threatCircle() ) {
+				cm.setHidden(false);
+			} else {
+				cm.setHidden(true);
+			}
+		}
+	}
+	
+	//hides all non-threatening quakes
+	private void hideQuakeMarkers() {
+		Location cityLocation = lastClicked.getLocation();
+		
+		for (Marker eq : quakeMarkers) {
+			if ( eq.getDistanceTo(cityLocation) < ((EarthquakeMarker)eq).threatCircle() ) {
+				eq.setHidden(false);
+			} else {
+				eq.setHidden(true);
+			}
+		}
+	}
 	
 	// loop over and unhide all markers
 	private void unhideMarkers() {
@@ -204,10 +278,7 @@ public class EarthquakeCityMap extends PApplet {
 		text("Size ~ Magnitude", xbase+25, ybase+110);
 		
 		fill(255, 255, 255);
-		ellipse(xbase+35, 
-				ybase+70, 
-				10, 
-				10);
+		ellipse(xbase+35, ybase+70, 10, 10);
 		rect(xbase+35-5, ybase+90-5, 10, 10);
 		
 		fill(color(255, 255, 0));
@@ -223,7 +294,7 @@ public class EarthquakeCityMap extends PApplet {
 		text("Intermediate", xbase+50, ybase+160);
 		text("Deep", xbase+50, ybase+180);
 
-		text("Past hour", xbase+50, ybase+200);
+		text("Past Day", xbase+50, ybase+200);
 		
 		fill(255, 255, 255);
 		int centerx = xbase+35;
@@ -243,7 +314,7 @@ public class EarthquakeCityMap extends PApplet {
 	// and returns true.  Notice that the helper method isInCountry will
 	// set this "country" property already.  Otherwise it returns false.	
 	private boolean isLand(PointFeature earthquake) {
-		
+			
 		// IMPLEMENT THIS: loop over all countries to check if location is in any of them
 		// If it is, add 1 to the entry in countryQuakes corresponding to this country.
 		for (Marker country : countryMarkers) {

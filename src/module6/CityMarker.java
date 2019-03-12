@@ -44,7 +44,7 @@ public class CityMarker extends CommonMarker {
 		
 		// IMPLEMENT: drawing triangle for each city
 		pg.fill(150, 30, 30);
-		pg.triangle(x, y-TRI_SIZE, x-TRI_SIZE, y+TRI_SIZE, x+TRI_SIZE, y+TRI_SIZE);
+		pg.triangle(x-TRI_SIZE, y-2*TRI_SIZE, x+TRI_SIZE, y-2*TRI_SIZE, x, y);
 		
 		// Restore previous drawing style
 		pg.popStyle();

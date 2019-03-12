@@ -51,7 +51,7 @@ public abstract class EarthquakeMarker extends CommonMarker
 		float magnitude = Float.parseFloat(properties.get("magnitude").toString());
 		properties.put("radius", 2*magnitude );
 		setProperties(properties);
-		this.radius = 1.75f*getMagnitude();
+		this.radius = 1.25f*getMagnitude();
 	}
 	
 
@@ -94,7 +94,12 @@ public abstract class EarthquakeMarker extends CommonMarker
 	public void showTitle(PGraphics pg, float x, float y)
 	{
 		// TODO: Implement this method
-		
+		String quakeTitle = this.getTitle();
+		float boxWidth = pg.textWidth(quakeTitle);
+		pg.fill(255, 255, 255);
+		pg.rect(x, y, boxWidth, 20);
+		pg.fill(0, 0, 0);
+		pg.text(quakeTitle, x, y+15);
 	}
 
 	
@@ -106,7 +111,7 @@ public abstract class EarthquakeMarker extends CommonMarker
 	 *  or predictive applications.
 	 */
 	public double threatCircle() {	
-		double miles = 20.0f * Math.pow(1.8, 2*getMagnitude()-5);
+		double miles = 20.0f * Math.pow(1.8, 2*getMagnitude() - 5);
 		double km = (miles * kmPerMile);
 		return km;
 	}

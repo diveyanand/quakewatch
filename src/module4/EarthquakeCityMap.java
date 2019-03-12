@@ -13,6 +13,8 @@ import de.fhpotsdam.unfolding.marker.Marker;
 import de.fhpotsdam.unfolding.marker.MultiMarker;
 import de.fhpotsdam.unfolding.providers.Google;
 import de.fhpotsdam.unfolding.providers.MBTilesMapProvider;
+import de.fhpotsdam.unfolding.providers.Microsoft;
+import de.fhpotsdam.unfolding.providers.Yahoo;
 import de.fhpotsdam.unfolding.utils.MapUtils;
 import parsing.ParseFeed;
 import processing.core.PApplet;
@@ -60,6 +62,9 @@ public class EarthquakeCityMap extends PApplet {
 	// A List of country markers
 	private List<Marker> countryMarkers;
 	
+	// A counter for quakes that occured in the ocean
+	private int oceanQuakeCount = 0;
+	
 	public void setup() {		
 		// (1) Initializing canvas and map tiles
 		size(900, 700, OPENGL);
@@ -68,7 +73,8 @@ public class EarthquakeCityMap extends PApplet {
 		    earthquakesURL = "2.5_week.atom";  // The same feed, but saved August 7, 2015
 		}
 		else {
-			map = new UnfoldingMap(this, 200, 50, 650, 600, new Google.GoogleMapProvider());
+			//map = new UnfoldingMap(this, 200, 50, 650, 600, new Google.GoogleMapProvider());
+			map = new UnfoldingMap(this, 200, 50, 650, 600, new Microsoft.HybridProvider());
 			// IF YOU WANT TO TEST WITH A LOCAL FILE, uncomment the next line
 		    //earthquakesURL = "2.5_week.atom";
 		}
@@ -107,6 +113,7 @@ public class EarthquakeCityMap extends PApplet {
 		  // OceanQuakes
 		  else {
 		    quakeMarkers.add(new OceanQuakeMarker(feature));
+		    oceanQuakeCount++;
 		  }
 	    }
 
@@ -141,17 +148,52 @@ public class EarthquakeCityMap extends PApplet {
 		textSize(12);
 		text("Earthquake Key", 50, 75);
 		
-		fill(color(255, 0, 0));
-		ellipse(50, 125, 15, 15);
-		fill(color(255, 255, 0));
-		ellipse(50, 175, 10, 10);
-		fill(color(0, 0, 255));
-		ellipse(50, 225, 5, 5);
+		fill(color(150, 0, 0));
+		triangle(60, 90, 55, 100, 65, 100);
 		
 		fill(0, 0, 0);
-		text("5.0+ Magnitude", 75, 125);
-		text("4.0+ Magnitude", 75, 175);
-		text("Below 4.0", 75, 225);
+		text("City Marker", 75, 95);
+		
+		fill(255, 255, 255);
+		ellipse(60, 120, 10, 10);
+		
+		fill(0, 0, 0);
+		text("Land Quake", 75, 120);
+		
+		fill(255, 255, 255);
+		rect(55, 140, 10, 10);
+		
+		fill(0, 0, 0);
+		text("Ocean Quake", 75, 145);
+		
+		text("Size ~ Magnitude", 55, 170);
+		
+		fill(255, 255, 0);
+		ellipse(60, 195, 10, 10);
+
+		fill(0, 0, 0);
+		text("Shallow", 75, 195);
+		
+		fill(0, 0, 255);
+		ellipse(60, 215, 10, 10);
+
+		fill(0, 0, 0);
+		text("Intermediate", 75, 215);
+		
+		fill(255, 0, 0);
+		ellipse(60, 235, 10, 10);
+
+		fill(0, 0, 0);
+		text("Deep", 75, 235);
+
+		fill(255, 255, 255);
+		ellipse(60, 255, 10, 10);
+		
+		fill(0, 0, 0);
+		line(55, 250, 65, 260);
+		line(65, 250, 55, 260);
+		
+		text("Past Day", 75, 255);
 	}
 
 	
@@ -170,7 +212,9 @@ public class EarthquakeCityMap extends PApplet {
 		// If isInCountry ever returns true, isLand should return true.
 		for (Marker m : countryMarkers) {
 			// TODO: Finish this method using the helper method isInCountry
-			
+			if (isInCountry(earthquake, m)) {
+				return true;
+			}
 		}
 		
 		
@@ -209,9 +253,30 @@ public class EarthquakeCityMap extends PApplet {
 		//       (e.g. isOnLand)
 		//  * If you know your Marker, m, is a LandQuakeMarker, then it has a "country" 
 		//      property set.  You can get the country with:
-		//        String country = (String)m.getProperty("country");
+		//        String country = (String)m.getProperty("country");	
 		
+		for (Marker cm : countryMarkers) {
+			String name = (String)cm.getProperty("name");
+			int landQuakeCount = 0;
+			
+			for (Marker qm : quakeMarkers) {
+				EarthquakeMarker em = (EarthquakeMarker)qm;
+				
+				if (em.isOnLand) {
+					String country = (String)em.getProperty("country");
+					
+					if (name == country) {
+						landQuakeCount++;
+					}	
+				}
+			}
+			
+			if (landQuakeCount > 0) {
+				System.out.println(name + ": " + landQuakeCount);
+			}
+		}
 		
+		System.out.println("OCEAN QUAKES: " + oceanQuakeCount);
 	}
 	
 	

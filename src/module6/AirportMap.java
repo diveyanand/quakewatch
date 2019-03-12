@@ -10,6 +10,7 @@ import de.fhpotsdam.unfolding.data.ShapeFeature;
 import de.fhpotsdam.unfolding.marker.Marker;
 import de.fhpotsdam.unfolding.marker.SimpleLinesMarker;
 import de.fhpotsdam.unfolding.marker.SimplePointMarker;
+import de.fhpotsdam.unfolding.providers.MapBox;
 import de.fhpotsdam.unfolding.utils.MapUtils;
 import de.fhpotsdam.unfolding.geo.Location;
 import parsing.ParseFeed;
@@ -27,12 +28,19 @@ public class AirportMap extends PApplet {
 	private List<Marker> airportList;
 	List<Marker> routeList;
 	
+	Location usaLoc = new Location(45.50f, -98.35);
+	
 	public void setup() {
-		// setting up PAppler
+		// setting up PApplet
 		size(800,600, OPENGL);
+		smooth();
 		
 		// setting up map and default events
 		map = new UnfoldingMap(this, 50, 50, 750, 550);
+		map.panTo(usaLoc);
+		map.zoomToLevel(4);
+		map.setZoomRange(4, 7); // prevent zooming too far out
+		map.setPanningRestriction(usaLoc, 1250);
 		MapUtils.createDefaultEventDispatcher(this, map);
 		
 		// get features from airport data

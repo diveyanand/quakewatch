@@ -10,7 +10,7 @@ import processing.core.PGraphics;
  *
  */
 // TODO: Implement the comparable interface
-public abstract class EarthquakeMarker extends CommonMarker
+public abstract class EarthquakeMarker extends CommonMarker implements Comparable<EarthquakeMarker>
 {
 	
 	// Did the earthquake occur on land?  This will be set by the subclasses.
@@ -56,7 +56,9 @@ public abstract class EarthquakeMarker extends CommonMarker
 	}
 	
 	// TODO: Add the method:
-	// public int compareTo(EarthquakeMarker marker)
+	public int compareTo(EarthquakeMarker marker) {
+		return Float.compare(marker.getMagnitude(), this.getMagnitude());
+	}
 	
 	
 	// calls abstract method drawEarthquake and then checks age and draws X if needed
@@ -71,21 +73,15 @@ public abstract class EarthquakeMarker extends CommonMarker
 		// call abstract method implemented in child class to draw marker shape
 		drawEarthquake(pg, x, y);
 		
-		// IMPLEMENT: add X over marker if within past day		
-		String age = getStringProperty("age");
-		if ("Past Hour".equals(age) || "Past Day".equals(age)) {
-			
+		// IMPLEMENT: add X over marker if within past day				
+		String quakeAge = this.getAge();
+		if (quakeAge.equals("Past Day") || quakeAge.equals("Past Hour")) {
+			pg.stroke(0);
 			pg.strokeWeight(2);
-			int buffer = 2;
-			pg.line(x-(radius+buffer), 
-					y-(radius+buffer), 
-					x+radius+buffer, 
-					y+radius+buffer);
-			pg.line(x-(radius+buffer), 
-					y+(radius+buffer), 
-					x+radius+buffer, 
-					y-(radius+buffer));
 			
+			int lineBuffer = 0;			
+			pg.line(x - (radius+lineBuffer), y - (radius+lineBuffer), x + (radius+lineBuffer), y + (radius+lineBuffer));
+			pg.line(x - (radius+lineBuffer), y + (radius+lineBuffer), x + (radius+lineBuffer), y - (radius+lineBuffer));
 		}
 		
 		// reset to previous styling
@@ -102,13 +98,12 @@ public abstract class EarthquakeMarker extends CommonMarker
 		pg.rectMode(PConstants.CORNER);
 		
 		pg.stroke(110);
-		pg.fill(255,255,255);
-		pg.rect(x, y + 15, pg.textWidth(title) +6, 18, 5);
+		pg.fill(255, 255, 255);
+		pg.rect(x, y+15, pg.textWidth(title)+6, 18, 5);
 		
 		pg.textAlign(PConstants.LEFT, PConstants.TOP);
 		pg.fill(0);
-		pg.text(title, x + 3 , y +18);
-		
+		pg.text(title, x+3 , y+18);
 		
 		pg.popStyle();
 		
@@ -179,7 +174,7 @@ public abstract class EarthquakeMarker extends CommonMarker
 		return isOnLand;
 	}
 	
-
-	
-	
+	public String getAge() {
+		return (String) getProperty("age");
+	}
 }
