@@ -1,4 +1,4 @@
-# UCSDUnfoldingMaps
+# quakewatch
 
 Interactive Java Applet to map real world earthquake data from the U.S. Geological Survey on the basis of magnitude, depth, recency, and threat radius. 
 - Earthquake data from https://earthquake.usgs.gov/earthquakes/
