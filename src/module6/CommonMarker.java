@@ -6,10 +6,9 @@ import de.fhpotsdam.unfolding.marker.SimplePointMarker;
 import processing.core.PGraphics;
 
 /** Implements a common marker for cities and earthquakes on an earthquake map
- * 
  * @author UC San Diego Intermediate Software Development MOOC team
- *
  */
+
 public abstract class CommonMarker extends SimplePointMarker {
 
 	// Records whether this marker has been clicked (most recently)
@@ -39,7 +38,6 @@ public abstract class CommonMarker extends SimplePointMarker {
 	// drawMarker and showTitle, which are abstract methods 
 	// implemented in subclasses
 	public void draw(PGraphics pg, float x, float y) {
-		// For starter code just drawMaker(...)
 		if (!hidden) {
 			drawMarker(pg, x, y);
 			if (selected) {
@@ -47,6 +45,7 @@ public abstract class CommonMarker extends SimplePointMarker {
 			}
 		}
 	}
+	
 	public abstract void drawMarker(PGraphics pg, float x, float y);
 	public abstract void showTitle(PGraphics pg, float x, float y);
 }

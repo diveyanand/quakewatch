@@ -23,7 +23,6 @@ import processing.core.PApplet;
  * An application with an interactive map displaying earthquake data.
  * Author: UC San Diego Intermediate Software Development MOOC team
  * @author Divey Anand
- * Date: July 17, 2015
  * */
 public class EarthquakeCityMap extends PApplet {
 	
@@ -61,10 +60,10 @@ public class EarthquakeCityMap extends PApplet {
 	// A List of country markers
 	private List<Marker> countryMarkers;
 	
-	// A counter for quakes that occured in the ocean
+	// A counter for quakes that occurred in the ocean
 	private int oceanQuakeCount = 0;
 	
-	// A counter for quakes that occured withinnthe threat circle of a city
+	// A counter for quakes that occurred within the threat circle of a city
 	private int nearbyQuakeCount = 0;
 	
 	// Average magnitude of nearby quakes
@@ -217,8 +216,7 @@ public class EarthquakeCityMap extends PApplet {
 	 * where the city is in the threat circle
 	 */
 	@Override
-	public void mouseClicked()
-	{
+	public void mouseClicked() {
 		// TODO: Implement this method
 		// Hint: You probably want a helper method or two to keep this code
 		// from getting too long/disorganized
@@ -438,8 +436,6 @@ public class EarthquakeCityMap extends PApplet {
 		
 		System.out.println("OCEAN QUAKES: " + oceanQuakeCount + "\n");
 	}
-	
-	
 	
 	// helper method to test whether a given earthquake is in a given country
 	// This will also add the country property to the properties of the earthquake feature if 

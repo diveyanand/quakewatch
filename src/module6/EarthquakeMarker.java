@@ -5,14 +5,10 @@ import processing.core.PConstants;
 import processing.core.PGraphics;
 
 /** Implements a visual marker for earthquakes on an earthquake map
- * 
  * @author UC San Diego Intermediate Software Development MOOC team
- *
  */
 // TODO: Implement the comparable interface
-public abstract class EarthquakeMarker extends CommonMarker implements Comparable<EarthquakeMarker>
-{
-	
+public abstract class EarthquakeMarker extends CommonMarker implements Comparable<EarthquakeMarker> {
 	// Did the earthquake occur on land?  This will be set by the subclasses.
 	protected boolean isOnLand;
 
@@ -35,8 +31,6 @@ public abstract class EarthquakeMarker extends CommonMarker implements Comparabl
 	public static final float THRESHOLD_INTERMEDIATE = 70;
 	/** Greater than or equal to this threshold is a deep depth */
 	public static final float THRESHOLD_DEEP = 300;
-
-	// ADD constants for colors
 
 	
 	// abstract method implemented in derived classes

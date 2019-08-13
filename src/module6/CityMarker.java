@@ -7,9 +7,7 @@ import processing.core.PConstants;
 import processing.core.PGraphics;
 
 /** Implements a visual marker for cities on an earthquake map
- * 
  * @author UC San Diego Intermediate Software Development MOOC team
- * 
  */
 public class CityMarker extends CommonMarker {
 	
@@ -27,7 +25,7 @@ public class CityMarker extends CommonMarker {
 	}
 	
 	
-	// pg is the graphics object on which you call the graphics
+	// 'pg' is the graphics object on which you call the graphics
 	// methods.  e.g. pg.fill(255, 0, 0) will set the color to red
 	// x and y are the center of the object to draw. 
 	// They will be used to calculate the coordinates to pass
@@ -51,8 +49,7 @@ public class CityMarker extends CommonMarker {
 	}
 	
 	/** Show the title of the city if this marker is selected */
-	public void showTitle(PGraphics pg, float x, float y)
-	{
+	public void showTitle(PGraphics pg, float x, float y) {
 		String name = getCity() + " " + getCountry() + " ";
 		String pop = "Pop: " + getPopulation() + " Million";
 		
@@ -70,18 +67,15 @@ public class CityMarker extends CommonMarker {
 		pg.popStyle();
 	}
 	
-	private String getCity()
-	{
+	private String getCity() {
 		return getStringProperty("name");
 	}
 	
-	private String getCountry()
-	{
+	private String getCountry() {
 		return getStringProperty("country");
 	}
 	
-	private float getPopulation()
-	{
+	private float getPopulation() {
 		return Float.parseFloat(getStringProperty("population"));
 	}
 }
